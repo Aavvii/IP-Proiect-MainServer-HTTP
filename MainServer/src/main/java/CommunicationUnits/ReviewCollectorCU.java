@@ -1,4 +1,4 @@
-package Server;
+package CommunicationUnits;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
@@ -23,7 +23,7 @@ public class ReviewCollectorCU {
 
     //daca nu exista in baza e date reviewurile, cerem review collectorului sa le genereze, astfel ca-i trimitem autorul si titlul cartii
     //primim reviewurile de la review collector
-    public JSONObject reviewCollectorCommunication(JSONObject bookInformation) throws IOException, InterruptedException {
+    public static JSONObject requestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
         //scriere in api
        /* String requestData = bookInformation.toString();
         HttpClient client = HttpClient.newHttpClient();

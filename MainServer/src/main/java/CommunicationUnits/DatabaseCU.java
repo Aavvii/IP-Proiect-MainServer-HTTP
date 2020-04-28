@@ -21,10 +21,10 @@ import java.util.List;
  * Se ocupa de primirea si trimiterea de JSON-uri
  */
 public class DatabaseCU {
-    public void login(String user, String password) {
+    public static void login(String user, String password) {
         //ne conectam la api-ul special pentru login
     }
-    public JSONObject databaseCommunication(JSONObject bookInformation) throws IOException, InterruptedException {
+    public static JSONObject requestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
         //scriere in api
        /* String requestData = bookInformation.toString();
         HttpClient client = HttpClient.newHttpClient();
@@ -61,7 +61,7 @@ public class DatabaseCU {
 
     }
     //am zis ca trimitem o lista de JSONuri reviewurile.We dont know yet
-    public void sendReviews(List<JSONObject> reviews) throws IOException, InterruptedException {
+    public static void sendReviews(JSONObject reviews) throws IOException, InterruptedException {
         //scriere in api
         /*List<String> requestData=new ArrayList<>();
         for(JSONObject jsonObject : reviews){

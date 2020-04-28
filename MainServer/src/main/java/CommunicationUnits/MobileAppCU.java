@@ -44,7 +44,6 @@ public class MobileAppCU implements HttpHandler {
         }
         return ret.toString();
     }
-
     private String handleGetRequest(HttpExchange httpExchange) {
         return httpExchange.
         getRequestURI()
@@ -56,28 +55,14 @@ public class MobileAppCU implements HttpHandler {
     private void handleResponse(HttpExchange httpExchange, String requestParamValue)  throws  IOException {
 
         OutputStream outputStream = httpExchange.getResponseBody();
-        StringBuilder htmlBuilder = new StringBuilder();
-
-        htmlBuilder.append("<html>").
-        append("<body>").
-        append("<h1>").
-        append("Hello ")
-                .append(requestParamValue)
-                .append("</h1>")
-                .append("</body>")
-                .append("</html>");
         // encode HTML content
-        String htmlResponse = StringEscapeUtils.escapeHtml4(htmlBuilder.toString());
-
         MasterCU processResponse = new MasterCU(requestParamValue);
-
-        processResponse.getOutput();
-
-
+        processResponse.prepareResponse();
+        String response = processResponse.getOutput();
         // this line is a must
-        httpExchange.sendResponseHeaders(200, htmlResponse.length());
+        httpExchange.sendResponseHeaders(200, response.length());
         //in loc de htmlResponse va fi un String/JSON reprezentand raspunsul
-        outputStream.write(htmlResponse.getBytes());
+        outputStream.write(response.getBytes());
         outputStream.flush();
         outputStream.close();
     }
