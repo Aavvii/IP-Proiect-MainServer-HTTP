@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="498d0e8a-848c-4d7d-a82b-94e024cbb419" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/LoginHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/DatabaseCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/DatabaseCU.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/ImageProcessorCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/ImageProcessorCU.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/MasterCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/MasterCU.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/MobileAppCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/MobileAppCU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/ReviewCollectorCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/ReviewCollectorCU.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MyHttpHandler.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +42,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1588091927797</updated>
-      <workItem from="1588091937308" duration="4992000" />
+      <workItem from="1588091937308" duration="6845000" />
     </task>
     <servers />
   </component>
