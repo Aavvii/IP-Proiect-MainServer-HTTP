@@ -2,6 +2,7 @@ package CommunicationUnits;
 
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,6 +16,40 @@ import java.net.Socket;
 
 public class MasterCU {
 
+    private String input;
+    private String output;
+
+    public int prepareResponse() {
+
+        JSONObject inputJSON = new JSONObject(input);
+
+        ImageProcessorCU ImageProcessor = new ImageProcessorCU();
+        JSONObject bookInfo = ImageProcessor.ImageProcessorCommunication(inputJSON);
+
+
+
+        return 0;
+    }
+
+    public MasterCU(String input) {
+        this.input = input;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
     /*public static void main(String[] args) throws IOException, InterruptedException {
         ServerSocket server = new ServerSocket(6969);
         DatabaseCU databaseCU=new DatabaseCU();

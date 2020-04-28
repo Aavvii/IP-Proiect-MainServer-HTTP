@@ -1,3 +1,4 @@
+import CommunicationUnits.MobileAppCU;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class Main {
         }
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
-        server.createContext("/test", new MyHttpHandler());
+        server.createContext("/test", new MobileAppCU());
         server.setExecutor(threadPoolExecutor);
         server.start();
         System.out.println(" Server started on port 8001");
