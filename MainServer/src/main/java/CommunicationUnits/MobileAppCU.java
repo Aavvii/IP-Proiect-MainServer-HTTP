@@ -1,63 +1,84 @@
 package CommunicationUnits;
 
-import org.json.JSONObject;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import org.apache.commons.text.StringEscapeUtils;
 
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 
-/**
- * MobileAppCU este responsabil pentru comunicarea cu componenta Mobile App
- * Se ocupa de primirea si trimiterea de JSON-uri
- */
-public class MobileAppCU {
+public class MobileAppCU implements HttpHandler {
 
-    public JSONObject receiveAndSendImageJson(JSONObject imageJson) throws IOException, InterruptedException {
-        //scrierea in api - trimiterea jsonului
-        /*String requestData = imageJson.toString();
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://szmuschi.pythonanywhere.com/api"))
-                .POST(HttpRequest.BodyPublishers.ofString(requestData))
-                .build();
-        HttpResponse<String> responseJson = null;
-        responseJson = client.send(request,
-                HttpResponse.BodyHandlers.ofString());*/
+    @Override
+    public void handle(HttpExchange httpExchange) throws IOException {
 
-        JSONObject jsonResponse=null;
-        URL obj = new URL("https://szmuschi.pythonanywhere.com/api");//api ul celor de la mobile app
-        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
-        postConnection.setRequestMethod("POST");
-        postConnection.setRequestProperty("content-type", "image/jpeg");//application/json
-        postConnection.setDoOutput(true);
-        int responseCode = postConnection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) { //success
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    postConnection.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            jsonResponse = new JSONObject(response.toString());
-
+        String requestParamValue=null;
+        if("GET".equals(httpExchange.getRequestMethod())) {
+            System.out.println("GET!");
+            System.out.println(httpExchange.getRequestURI());
+            requestParamValue = handleGetRequest(httpExchange);
+        }else if("POST".equals(httpExchange.getRequestMethod())) {
+            System.out.println("Post!");
+            requestParamValue = handlePostRequest(httpExchange);
         }
-        return jsonResponse;
+        else
+        {
+            System.out.println("not Post not Get!");
+        }
+        handleResponse(httpExchange,requestParamValue);
     }
 
-    public void sendReviews(List<JSONObject> reviews) {
-        List<String> requestData = new ArrayList<>();
-        for(JSONObject jo : reviews){ //populare lista cu stringuri din json
-            requestData.add(jsonObject.toString());
+    private String handlePostRequest(HttpExchange httpExchange) {
+        BufferedReader postInfo = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody()));
+        System.out.println(httpExchange.getRequestHeaders().getFirst("Content-type"));
+        StringBuilder ret = new StringBuilder();
+        String aux = "test: ";
+        try {
+            while ((aux = postInfo.readLine()) != null) {
+                ret.append(aux);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        for(String string_json : requestData){
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://szmuschi.pythonanywhere.com/api"))//api-ul celor de la mobile app
-                    .POST(HttpRequest.BodyPublishers.ofString(s))
-                    .build();
-            HttpResponse<String> responseJson = null;
-            responseJson = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-        }
+        return ret.toString();
+    }
+
+    private String handleGetRequest(HttpExchange httpExchange) {
+        return httpExchange.
+        getRequestURI()
+                .toString()
+                .split("\\?")[1]
+                .split("=")[1];
+    }
+
+    private void handleResponse(HttpExchange httpExchange, String requestParamValue)  throws  IOException {
+
+        OutputStream outputStream = httpExchange.getResponseBody();
+        StringBuilder htmlBuilder = new StringBuilder();
+
+        htmlBuilder.append("<html>").
+        append("<body>").
+        append("<h1>").
+        append("Hello ")
+                .append(requestParamValue)
+                .append("</h1>")
+                .append("</body>")
+                .append("</html>");
+        // encode HTML content
+        String htmlResponse = StringEscapeUtils.escapeHtml4(htmlBuilder.toString());
+
+        MasterCU processResponse = new MasterCU(requestParamValue);
+
+        processResponse.getOutput();
+
+
+        // this line is a must
+        httpExchange.sendResponseHeaders(200, htmlResponse.length());
+        //in loc de htmlResponse va fi un String/JSON reprezentand raspunsul
+        outputStream.write(htmlResponse.getBytes());
+        outputStream.flush();
+        outputStream.close();
     }
 }
