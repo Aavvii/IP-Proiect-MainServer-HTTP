@@ -2,7 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="498d0e8a-848c-4d7d-a82b-94e024cbb419" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainServer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MainServer.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/DatabaseCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/DatabaseCU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/MasterCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/MasterCU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/ReviewCollectorCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/ReviewCollectorCU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LoginHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LoginHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +38,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -42,6 +51,7 @@
       <option name="presentableId" value="Default" />
       <updated>1588091927797</updated>
       <workItem from="1588091937308" duration="8089000" />
+      <workItem from="1588155387724" duration="1419000" />
     </task>
     <servers />
   </component>

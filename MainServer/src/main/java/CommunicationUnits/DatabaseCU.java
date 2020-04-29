@@ -6,7 +6,7 @@ import java.net.*;
 
 
 public class DatabaseCU {
-    public String requestLogin(String user, String password) throws IOException, InterruptedException {
+    public static String requestLogin(String user, String password) throws IOException, InterruptedException {
         String loginData=user + password;
         URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
@@ -35,7 +35,7 @@ public class DatabaseCU {
         return loginStatus;
     }
 
-    public JSONObject databaseRequestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
+    public static JSONObject databaseRequestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
         JSONObject jsonResponse = null;
         URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
@@ -65,7 +65,7 @@ public class DatabaseCU {
     }
 
     //am zis ca trimitem o lista de JSONuri reviewurile.We dont know yet
-    public int sendReviews(JSONObject reviews) throws IOException, InterruptedException {
+    public static int sendReviews(JSONObject reviews) throws IOException, InterruptedException {
         URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");

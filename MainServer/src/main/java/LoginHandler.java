@@ -13,12 +13,8 @@ public class LoginHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
 
-        String requestParamValue=null;
-        if("GET".equals(httpExchange.getRequestMethod())) {
-            System.out.println("GET!");
-            System.out.println(httpExchange.getRequestURI());
-            requestParamValue = handleGetRequest(httpExchange);
-        }else if("POST".equals(httpExchange.getRequestMethod())) {
+        JSONObject requestParamValue=null;
+         if("POST".equals(httpExchange.getRequestMethod())) {
             System.out.println("Post!");
             requestParamValue = handlePostRequest(httpExchange);
         }
@@ -29,15 +25,8 @@ public class LoginHandler implements HttpHandler {
         handleResponse(httpExchange,requestParamValue);
     }
 
-    private String handlePostRequest(HttpExchange httpExchange) {
+    private JSONObject handlePostRequest(HttpExchange httpExchange) {
 
-//        File file = new File("image.txt" + (id++));
-//        InputStream inputStream = httpExchange.getRequestBody();
-//        try {
-//            Files.copy(inputStream, file.toPath());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         BufferedReader postInfo = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody()));
         StringBuilder ret = new StringBuilder();
@@ -53,18 +42,10 @@ public class LoginHandler implements HttpHandler {
         System.out.println(json.toString() + "log in");
 
 //        System.out.println(ret.toString());
-        return ret.toString();
+        return json;
     }
 
-    private String handleGetRequest(HttpExchange httpExchange) {
-        return httpExchange.
-                getRequestURI()
-                .toString()
-                .split("\\?")[1]
-                .split("=")[1];
-    }
-
-    private void handleResponse(HttpExchange httpExchange, String requestParamValue)  throws  IOException {
+    private void handleResponse(HttpExchange httpExchange, JSONObject requestParamValue)  throws  IOException {
 
         OutputStream outputStream = httpExchange.getResponseBody();
         StringBuilder htmlBuilder = new StringBuilder();

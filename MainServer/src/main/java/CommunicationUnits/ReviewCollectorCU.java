@@ -11,7 +11,7 @@ import java.net.http.HttpResponse;
 public class ReviewCollectorCU {
 
 
-    public JSONObject requestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
+    public static JSONObject requestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
         JSONObject jsonReviews=null;
         URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();

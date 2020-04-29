@@ -25,7 +25,7 @@ public class MasterCU {
         JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
         JSONObject dbReviewsResponse = null;
         try {
-            dbReviewsResponse = DatabaseCU.requestReviews(bookInfo);
+            dbReviewsResponse = DatabaseCU.databaseRequestReviews(bookInfo);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
