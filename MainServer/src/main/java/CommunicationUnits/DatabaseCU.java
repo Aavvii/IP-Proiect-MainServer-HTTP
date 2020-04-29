@@ -1,49 +1,23 @@
 package CommunicationUnits;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.*;
-//Importuri care nu sunt necesare dar erau aici
-//import java.net.http.HttpClient;
-//import java.net.http.HttpRequest;
-//import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-/**
- * DatabaseCU este responsabil pentru comunicarea cu componenta Database
- * Se ocupa de primirea si trimiterea de JSON-uri
- */
+
 public class DatabaseCU {
-    public static void login(String user, String password) {
-        //ne conectam la api-ul special pentru login
-    }
-    public static JSONObject requestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
-        //scriere in api
-       /* String requestData = bookInformation.toString();
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://szmuschi.pythonanywhere.com/api"))
-                .POST(HttpRequest.BodyPublishers.ofString(requestData))
-                .build();
-
-        HttpResponse<String> responseJson = null;
-        responseJson = client.send(request,
-                HttpResponse.BodyHandlers.ofString());*/
-        //aceasta parte este un o scriere in api care momentan nu merge
-
-        JSONObject jsonResponse=null;
-        URL obj = new URL("https://szmuschi.pythonanywhere.com/api");
+    public String requestLogin(String user, String password) throws IOException, InterruptedException {
+        String loginData=user + password;
+        URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");
         postConnection.setDoOutput(true);
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(loginData);
+        send.close();
+
+        String loginStatus=null;
         int responseCode = postConnection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
             BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -54,30 +28,66 @@ public class DatabaseCU {
                 response.append(inputLine);
             }
             in.close();
-            jsonResponse = new JSONObject(response.toString());
+            loginStatus=null;
 
         }
-        return jsonResponse;
 
+        return loginStatus;
     }
-    //am zis ca trimitem o lista de JSONuri reviewurile.We dont know yet
-    public static void sendReviews(JSONObject reviews) throws IOException, InterruptedException {
-        //scriere in api
-        /*List<String> requestData=new ArrayList<>();
-        for(JSONObject jsonObject : reviews){
-            requestData.add(jsonObject.toString());
-        }
-        for(String s  : requestData) {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://szmuschi.pythonanywhere.com/api"))
-                    .POST(HttpRequest.BodyPublishers.ofString(s))
-                    .build();
 
-            HttpResponse<String> responseJson = null;
-            responseJson = client.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-        }*/
-        //aceasta parte este un o scriere in api care momentan nu merge
+    public JSONObject databaseRequestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
+        JSONObject jsonResponse = null;
+        URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setDoOutput(true);
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(bookInformation.toString());
+        send.close();
+
+
+        int responseCode = postConnection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    postConnection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            jsonResponse = new JSONObject(response);
+
+        }
+
+        return jsonResponse;
+    }
+
+    //am zis ca trimitem o lista de JSONuri reviewurile.We dont know yet
+    public int sendReviews(JSONObject reviews) throws IOException, InterruptedException {
+        URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setDoOutput(true);
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(reviews.toString());
+        send.close();
+        int responseOperation = 0;
+        int responseCode = postConnection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    postConnection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            responseOperation = Integer.parseInt(response.toString());
+
+        }
+        return responseOperation;
     }
 }
