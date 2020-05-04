@@ -54,6 +54,7 @@ public class MobileAppCU implements HttpHandler {
 
     private void handleResponse(HttpExchange httpExchange, String requestParamValue)  throws  IOException {
 
+
         OutputStream outputStream = httpExchange.getResponseBody();
         // encode HTML content
         MasterCU processResponse = new MasterCU(requestParamValue);

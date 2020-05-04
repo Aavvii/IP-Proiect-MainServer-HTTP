@@ -24,21 +24,19 @@ public class MasterCU {
         JSONObject inputJSON = new JSONObject(input);
         JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
         JSONObject dbReviewsResponse = null;
+//        System.out.println(bookInfo);
         try {
             dbReviewsResponse = DatabaseCU.databaseRequestReviews(bookInfo);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
+        System.out.println(dbReviewsResponse);
         JSONObject bookReviews = null;
         if ("{}".equals(dbReviewsResponse.toString())) {
             try {
                 bookReviews = ReviewCollectorCU.requestReviews(bookInfo);
                 DatabaseCU.sendReviews(bookReviews);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
 

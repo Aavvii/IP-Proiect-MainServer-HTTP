@@ -29,6 +29,7 @@ public class LoginHandler implements HttpHandler {
 
 
         BufferedReader postInfo = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody()));
+        
         StringBuilder ret = new StringBuilder();
         String aux = "test: ";
         try {
