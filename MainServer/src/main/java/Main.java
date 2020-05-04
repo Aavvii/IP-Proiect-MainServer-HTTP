@@ -16,7 +16,7 @@ public class Main {
         }
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
-        server.createContext("/getReviews", new MobileAppCU());
+        server.createContext("/test", new MobileAppCU());
         server.createContext("/login", new LoginHandler());
         server.setExecutor(threadPoolExecutor);
         server.start();

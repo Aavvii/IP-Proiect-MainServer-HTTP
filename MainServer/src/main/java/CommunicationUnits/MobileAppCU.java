@@ -4,10 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.text.StringEscapeUtils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 
 public class MobileAppCU implements HttpHandler {
 
@@ -42,7 +39,7 @@ public class MobileAppCU implements HttpHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ret.toString();
+        return ret.toString().replace("\\/", "/" );
     }
     private String handleGetRequest(HttpExchange httpExchange) {
         return httpExchange.
@@ -60,6 +57,14 @@ public class MobileAppCU implements HttpHandler {
         MasterCU processResponse = new MasterCU(requestParamValue);
         processResponse.prepareResponse();
         String response = processResponse.getOutput();
+
+        //TESTING WITH MOBILE APP
+//        FileOutputStream file = new FileOutputStream("imgToText.txt");
+//        file.write(requestParamValue.replace("\\/", "/" ).getBytes());
+//        String response = "ok ok";
+        //END TESTING
+
+
         // this line is a must
         httpExchange.sendResponseHeaders(200, response.length());
         //in loc de htmlResponse va fi un String/JSON reprezentand raspunsul
