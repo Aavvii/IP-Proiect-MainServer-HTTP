@@ -25,11 +25,10 @@ public class MasterCU {
     private String output;
 
     public void prepareResponse() {
-        JSONObject inputJSON = new JSONObject(input);
-        //JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
+        //JSONObject inputJSON = new JSONObject(input);
+       // JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
 //Caz 1: eroare la beleuz
-        //JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-606-623-2\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
-        JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-0135048740\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
+        JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-606-623-2\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
 //Caz 2: should work
         //JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-006-092-043-2\", \"author\": \"Andy Mitchell\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"\"}");
         JSONObject dbReviewsResponse = null;
