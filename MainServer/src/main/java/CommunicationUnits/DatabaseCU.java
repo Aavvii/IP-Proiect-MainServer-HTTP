@@ -37,8 +37,8 @@ public class DatabaseCU {
 
     public static JSONObject databaseRequestReviews(JSONObject bookInformation) throws IOException {
         JSONObject jsonResponse = null;
-        URL obj = new URL(new URL("http://localhost:9595/"), "test/");
-//        URL obj = new URL("127.0.0.1:9595/test");
+       // URL obj = new URL(new URL("http://localhost:9595/"), "test/");
+        URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");
@@ -46,7 +46,6 @@ public class DatabaseCU {
         BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
         send.write(bookInformation.toString());
         send.close();
-
 
         int responseCode = postConnection.getResponseCode();
         System.out.println("Database response code: " + responseCode);

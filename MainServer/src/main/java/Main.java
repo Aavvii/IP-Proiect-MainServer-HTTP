@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         HttpServer server = null;
         try {
-            server = HttpServer.create(new InetSocketAddress("192.168.0.212", 6969), 0);
+            server = HttpServer.create(new InetSocketAddress("127.0.0.1", 6969), 0);
         } catch (IOException e) {
             e.printStackTrace();
         }

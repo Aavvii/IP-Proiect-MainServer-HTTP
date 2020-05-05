@@ -21,18 +21,21 @@ public class MasterCU {
 
     public void prepareResponse() {
 
-        JSONObject inputJSON = new JSONObject(input);
-        JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
+//        JSONObject inputJSON = new JSONObject(input);
+//        JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
+        JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-606-623-2\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
         JSONObject dbReviewsResponse = null;
-//        System.out.println(bookInfo);
-        try {
-            dbReviewsResponse = DatabaseCU.databaseRequestReviews(bookInfo);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(dbReviewsResponse);
+        System.out.println("bookInfo"+bookInfo);
+//        try {
+//            //dbReviewsResponse = DatabaseCU.databaseRequestReviews(bookInfo);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        System.out.println("dbReviewsResponse"+dbReviewsResponse);
         JSONObject bookReviews = null;
-        if ("{}".equals(dbReviewsResponse.toString())) {
+       // if ("{}".equals(dbReviewsResponse.toString())) {
+        if(dbReviewsResponse.toString().equals(null)){
             try {
                 bookReviews = ReviewCollectorCU.requestReviews(bookInfo);
                 DatabaseCU.sendReviews(bookReviews);
@@ -40,8 +43,7 @@ public class MasterCU {
                 e.printStackTrace();
             }
 
-        }
-        else {
+        }else {
             bookReviews = dbReviewsResponse;
         }
         output = bookReviews.toString();
