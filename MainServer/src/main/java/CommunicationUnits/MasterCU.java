@@ -13,6 +13,11 @@ import java.net.Socket;
  * Vor fi apelate functii din celelate CU-uri.
  * In momentul actual codul este de la partea de socket-uri - si nu este util.
  */
+//http://reviewinatorserver.chickenkiller.com:6969/test
+//DB: {
+//	"method":"getBooksByGenre"
+//	"argument":"978-909-320-212"
+//}
 
 public class MasterCU {
 
@@ -20,30 +25,35 @@ public class MasterCU {
     private String output;
 
     public void prepareResponse() {
-
-//        JSONObject inputJSON = new JSONObject(input);
-//        JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
-        JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-606-623-2\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
+        JSONObject inputJSON = new JSONObject(input);
+        //JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
+//Caz 1: eroare la beleuz
+        //JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-606-623-2\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
+        JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-0135048740\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
+//Caz 2: should work
+        //JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-006-092-043-2\", \"author\": \"Andy Mitchell\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"\"}");
         JSONObject dbReviewsResponse = null;
-        System.out.println("bookInfo"+bookInfo);
+//        System.out.println("bookInfo"+bookInfo);
 //        try {
-//            //dbReviewsResponse = DatabaseCU.databaseRequestReviews(bookInfo);
+//            dbReviewsResponse = DatabaseCU.databaseRequestReviews(bookInfo);
+//            System.out.println("aici");
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
-        System.out.println("dbReviewsResponse"+dbReviewsResponse);
+        System.out.println("dbReviewsResponse : "+dbReviewsResponse);
         JSONObject bookReviews = null;
-       // if ("{}".equals(dbReviewsResponse.toString())) {
-        if(dbReviewsResponse.toString().equals(null)){
+        //if (dbReviewsResponse.toString().equals(null)) {
+        if(dbReviewsResponse == null){
             try {
+                System.out.println("bookInfo : " + bookInfo);
                 bookReviews = ReviewCollectorCU.requestReviews(bookInfo);
-                DatabaseCU.sendReviews(bookReviews);
+                System.out.println("----------------------------------------------- \n bookReviewsBeleuz : " + bookReviews);
+               // DatabaseCU.sendReviews(bookReviews);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-
-        }else {
+        }
+        else {
             bookReviews = dbReviewsResponse;
         }
         output = bookReviews.toString();
