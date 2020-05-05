@@ -1,4 +1,5 @@
 package CommunicationUnits;
+
 import org.json.JSONObject;
 
 import java.io.*;
@@ -19,7 +20,7 @@ public class ReviewCollectorCU {
             String ISBN = bookInformation.get("ISBN").toString();
             ISBN = ISBN.replaceAll("[^0-9]", "");
             System.out.println("isbn : " + ISBN);
-             obj = new URL("http://stefanbeleuz.pythonanywhere.com/review/goodreads?isbn="+ISBN);//ok
+            obj = new URL("http://stefanbeleuz.pythonanywhere.com/review/goodreads?isbn=" + ISBN);//ok
             //obj = new URL("http://stefanbeleuz.pythonanywhere.com/review/goodreads?isbn=9780060920432");
             System.out.println("obj: " + obj.toString());
             HttpURLConnection postConnection;
@@ -43,8 +44,8 @@ public class ReviewCollectorCU {
                 while (true) {
                     if (!((inputLine = in.readLine()) != null)) break;
                     response.append(inputLine);
-                    String error = response.substring(2,7);
-                    if(error.equals("error")){
+                    String error = response.substring(2, 7);
+                    if (error.equals("error")) {
                         //trimitere eroare la mobile app
                     }
                 }

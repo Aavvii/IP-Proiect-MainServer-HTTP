@@ -23,7 +23,7 @@ public class ImageProcessorCU {
     * "success": "ok", "title": "Silmarilion"}
     */
 
-    public static JSONObject requestBookInfo(JSONObject imagineJson) {
+    public static JSONObject requestBookInfo(String imagineJson) {
         JSONObject jsonResponse = null;
         URL obj = null;
         try {
@@ -33,11 +33,13 @@ public class ImageProcessorCU {
             postConnection = (HttpURLConnection) obj.openConnection();
             postConnection.setRequestMethod("POST");
             postConnection.setRequestProperty("content-type", "application/json");
+
             postConnection.setDoOutput(true);
-            BufferedWriter send = null;
-            send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+            BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+            // TODO send.write(imagineJson.toString());
             send.write(imagineJson.toString());
             send.close();
+
             int responseCode = 0;
             responseCode = postConnection.getResponseCode();
             System.out.println("IMGPROC CU response code: " + responseCode);
@@ -54,21 +56,25 @@ public class ImageProcessorCU {
                     if (!((inputLine = in.readLine()) != null)) break;
                     response.append(inputLine);
                 }
-//                System.out.println("img proc response:" + response.toString());
+                System.out.println("ImageProcesorCU response:" + response.toString());
                 in.close();
 
-                JSONObject newJson = new JSONObject(response.toString());
+                //JSONObject newJson = new JSONObject(response.toString());
 
-                jsonResponse = new JSONObject();
-                jsonResponse.put("method", "getBookByISBN");
-                jsonResponse.put("argument", newJson.get("ISBN"));
-                System.out.println(jsonResponse.toString());
+                jsonResponse = new JSONObject(response.toString());
+
+                //jsonResponse.put("method", "getBookByISBN");
+                //jsonResponse.put("argument", newJson.get("ISBN"));
+                //System.out.println(jsonResponse.toString());
+
+                // TODO Linia asta va fi stearsa dupa ce raspunsul de la Image Processor nu va mai fi default
+                jsonResponse.put("ISBN", "978-0135048740");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-
+        //System.out.println(jsonResponse);
         return jsonResponse;
     }
 

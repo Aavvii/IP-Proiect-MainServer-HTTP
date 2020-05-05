@@ -1,0 +1,27 @@
+src\config.json
+src\config.json
+src\config.json
+src\config.json
+src\config.json
+src\config.json
+src\config.json
+src\config.json
+src\config.json
+src\config.json
+src\config.json
+..\config.json
+Server listening at port 9595
+ORA-28040: No matching authentication protocol
+
+Server listening at port 9595
+Server listening at port 9595
+ORA-28040: No matching authentication protocol
+
+Server listening at port 9595
+Server listening at port 9595
+ORA-28040: No matching authentication protocol
+
+Address already in use: bind
+Address already in use: bind
+Address already in use: bind
+Address already in use: bind
