@@ -62,7 +62,7 @@ public class MasterCU {
         JSONObject bookReviews = null;
 
         // TODO Decomenteaza linia urmatoare pentru a testa crawlerul
-        //dbReviewsResponse = null;
+        dbReviewsResponse = null;
         if ((dbReviewsResponse == null) || (dbReviewsResponse.get("reviewText") == "")) {
             try {
                 bookReviews = ReviewCollectorCU.requestReviews(bookInfo);
