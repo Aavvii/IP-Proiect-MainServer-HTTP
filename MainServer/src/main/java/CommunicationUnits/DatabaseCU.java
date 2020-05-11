@@ -75,6 +75,29 @@ public class DatabaseCU {
         }
     }
 
+    public static boolean requestHistory(JSONObject jsonObject) throws IOException {
+        URL obj = new URL("http://87.255.79.195:7532/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setDoOutput(true);
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("method", "getHistoryByUserNickname");
+        requestJson.put("argument", jsonObject.get("nickname"));//in fct de ce primesc de la mobile
+        System.out.println(requestJson.toString());
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(requestJson.toString());
+        send.close();
+
+        int responseCode = postConnection.getResponseCode();
+        postConnection.getInputStream().close();
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            return true;
+        }
+        else { return false; }
+    }
+
+
     public static JSONObject databaseRequestReviews(JSONObject bookinfo) throws IOException {
 
         client = HttpClient.newHttpClient();
