@@ -2,7 +2,6 @@ package CommunicationUnits;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.*;
 
@@ -49,8 +48,6 @@ public class MobileAppCU implements HttpHandler {
     }
 
     private void handleResponse(HttpExchange httpExchange, String requestParamValue) throws IOException {
-
-
         OutputStream outputStream = httpExchange.getResponseBody();
         // encode HTML content
         MasterCU processResponse = new MasterCU(requestParamValue);

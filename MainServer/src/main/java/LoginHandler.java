@@ -55,5 +55,4 @@ public class LoginHandler implements HttpHandler {
             httpExchange.getResponseBody().close();
         }
     }
-
 }
