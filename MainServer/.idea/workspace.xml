@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="MainServer:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="498d0e8a-848c-4d7d-a82b-94e024cbb419" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/MainServer_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/artifacts/MainServer_jar/MainServer.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/SignUpHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/MobileAppCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/MobileAppCU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainServer.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MainServer.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/CommunicationUnits/DatabaseCU.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/CommunicationUnits/DatabaseCU.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/LoginHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/LoginHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/CommunicationUnits/DatabaseCU.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/CommunicationUnits/DatabaseCU.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/LoginHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/LoginHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,30 +44,29 @@
     </option>
   </component>
   <component name="ProjectId" id="1bB40GC5Ce5IS3KQ81MZhuF4kRA" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\trren\Desktop\Java\IP\IP-Proiect-MainServer-HTTP\MainServer\src\main\resources" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -85,6 +98,12 @@
       <workItem from="1588596246125" duration="8859000" />
       <workItem from="1588615787076" duration="2097000" />
       <workItem from="1588673369187" duration="1570000" />
+      <workItem from="1588712950815" duration="730000" />
+      <workItem from="1588764293825" duration="1654000" />
+      <workItem from="1588767299800" duration="1072000" />
+      <workItem from="1589041983674" duration="3454000" />
+      <workItem from="1589102142623" duration="1577000" />
+      <workItem from="1589112935275" duration="16784000" />
     </task>
     <servers />
   </component>
@@ -96,32 +115,53 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="460" y="119" key="FileChooserDialogImpl" timestamp="1588590879050">
+    <state x="485" y="73" key="#com.intellij.ide.util.MemberChooser" timestamp="1589126461234">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state x="460" y="119" key="FileChooserDialogImpl/0.0.1360.728@0.0.1360.728" timestamp="1588590879050" />
-    <state width="1317" height="145" key="GridCell.Tab.0.bottom" timestamp="1588617890284">
+    <state x="485" y="73" key="#com.intellij.ide.util.MemberChooser/0.0.1360.728@0.0.1360.728" timestamp="1589126461234" />
+    <state x="410" y="148" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1589114774749">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state width="1317" height="145" key="GridCell.Tab.0.bottom/0.0.1360.728@0.0.1360.728" timestamp="1588617890284" />
-    <state width="1317" height="145" key="GridCell.Tab.0.center" timestamp="1588617890284">
+    <state x="410" y="148" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1360.728@0.0.1360.728" timestamp="1589114774749" />
+    <state x="528" y="253" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1589103098370">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state width="1317" height="145" key="GridCell.Tab.0.center/0.0.1360.728@0.0.1360.728" timestamp="1588617890284" />
-    <state width="1317" height="145" key="GridCell.Tab.0.left" timestamp="1588617890283">
+    <state x="528" y="253" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1360.728@0.0.1360.728" timestamp="1589103098370" />
+    <state x="460" y="119" key="FileChooserDialogImpl" timestamp="1588765734363">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state width="1317" height="145" key="GridCell.Tab.0.left/0.0.1360.728@0.0.1360.728" timestamp="1588617890283" />
-    <state width="1317" height="145" key="GridCell.Tab.0.right" timestamp="1588617890284">
+    <state x="460" y="119" key="FileChooserDialogImpl/0.0.1360.728@0.0.1360.728" timestamp="1588765734363" />
+    <state width="1317" height="217" key="GridCell.Tab.0.bottom" timestamp="1589134346298">
       <screen x="0" y="0" width="1360" height="728" />
     </state>
-    <state width="1317" height="145" key="GridCell.Tab.0.right/0.0.1360.728@0.0.1360.728" timestamp="1588617890284" />
+    <state width="1317" height="217" key="GridCell.Tab.0.bottom/0.0.1360.728@0.0.1360.728" timestamp="1589134346298" />
+    <state width="1317" height="217" key="GridCell.Tab.0.center" timestamp="1589134346298">
+      <screen x="0" y="0" width="1360" height="728" />
+    </state>
+    <state width="1317" height="217" key="GridCell.Tab.0.center/0.0.1360.728@0.0.1360.728" timestamp="1589134346298" />
+    <state width="1317" height="217" key="GridCell.Tab.0.left" timestamp="1589134346298">
+      <screen x="0" y="0" width="1360" height="728" />
+    </state>
+    <state width="1317" height="217" key="GridCell.Tab.0.left/0.0.1360.728@0.0.1360.728" timestamp="1589134346298" />
+    <state width="1317" height="217" key="GridCell.Tab.0.right" timestamp="1589134346298">
+      <screen x="0" y="0" width="1360" height="728" />
+    </state>
+    <state width="1317" height="217" key="GridCell.Tab.0.right/0.0.1360.728@0.0.1360.728" timestamp="1589134346298" />
+    <state x="160" y="0" key="SettingsEditor" timestamp="1589132224420">
+      <screen x="0" y="0" width="1360" height="728" />
+    </state>
+    <state x="160" y="0" key="SettingsEditor/0.0.1360.728@0.0.1360.728" timestamp="1589132224420" />
   </component>
 </project>

@@ -10,14 +10,15 @@ public class Main {
     public static void main(String[] args) {
         HttpServer server = null;
         try {
-            server = HttpServer.create(new InetSocketAddress("localhost", 6969), 0);
+            server = HttpServer.create(new InetSocketAddress("192.168.0.212", 6969), 0);
         } catch (IOException e) {
             e.printStackTrace();
         }
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
         server.createContext("/test", new MobileAppCU());
-        server.createContext("/login", new LoginHandler());
+        server.createContext("/user/login", new LoginHandler());
+        server.createContext("/user/signup", new SignUpHandler());
         server.setExecutor(threadPoolExecutor);
         server.start();
         System.out.println(" Server started on port 6969");

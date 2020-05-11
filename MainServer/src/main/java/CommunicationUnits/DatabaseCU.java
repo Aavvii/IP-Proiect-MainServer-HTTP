@@ -1,5 +1,6 @@
 package CommunicationUnits;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -12,33 +13,66 @@ import java.net.http.HttpResponse;
 public class DatabaseCU {
     static HttpClient client;
 
-    public static String requestLogin(String user, String password) throws IOException, InterruptedException {
-        String loginData = user + password;
-        URL obj = new URL("localhost:9595/test");
+    public static void requestLogin(JSONObject in) throws IOException {
+
+        URL obj = new URL("http://87.255.79.195:7532/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");
         postConnection.setDoOutput(true);
+        in.put("method", "getUserByNickname");
+        in.put("argument", in.get("username"));
         BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
-        send.write(loginData);
+        send.write(in.toString());
         send.close();
 
-        String loginStatus = null;
         int responseCode = postConnection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
-            BufferedReader in = new BufferedReader(new InputStreamReader(
+            BufferedReader input = new BufferedReader(new InputStreamReader(
                     postConnection.getInputStream()));
             String inputLine;
             StringBuffer response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
+            while ((inputLine = input.readLine()) != null) {
                 response.append(inputLine);
             }
-            in.close();
-            loginStatus = null;
+            input.close();
 
+            JSONObject out = new JSONObject(response.toString());
+
+            if (out.get("password").toString().equals(in.get("password").toString())) {
+                in.put("responseCode", responseCode);
+            }
+            else in.put("responseCode", 404);
         }
 
-        return loginStatus;
+        else {
+            in.put("responseCode", responseCode);
+        }
+    }
+
+    public static boolean singUpToDatabase (JSONObject in) throws IOException {
+        URL obj = new URL("http://87.255.79.195:7532/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setDoOutput(true);
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("method", "addUser");
+        requestJson.put("argument", in);
+        System.out.println(requestJson.toString());
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(requestJson.toString());
+        send.close();
+
+        int responseCode = postConnection.getResponseCode();
+
+        postConnection.getInputStream().close();
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public static JSONObject databaseRequestReviews(JSONObject bookinfo) throws IOException {
