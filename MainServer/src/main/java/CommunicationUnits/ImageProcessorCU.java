@@ -1,5 +1,6 @@
 package CommunicationUnits;
 
+import com.validator.ErrorHandling;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -58,17 +59,51 @@ public class ImageProcessorCU {
                 }
                 System.out.println("ImageProcesorCU response:" + response.toString());
                 in.close();
-
-                //JSONObject newJson = new JSONObject(response.toString());
-
-                jsonResponse = new JSONObject(response.toString());
-
-                //jsonResponse.put("method", "getBookByISBN");
-                //jsonResponse.put("argument", newJson.get("ISBN"));
-                //System.out.println(jsonResponse.toString());
-
-                // TODO Linia asta va fi stearsa dupa ce raspunsul de la Image Processor nu va mai fi default
-                jsonResponse.put("ISBN", "978-0135048740");
+                if(response.toString().equals("")) {
+                    jsonResponse =new JSONObject();
+                    jsonResponse.put("mesajEroare","Eroare interna");
+                    jsonResponse.put("responseCode","406");
+                }
+                else {
+                    //JSONObject newJson = new JSONObject(response.toString());
+                    if (ErrorHandling.isValid(response.toString())) {
+                        jsonResponse = new JSONObject(response.toString());
+                        //jsonResponse.put("method", "getBookByISBN");
+                        //jsonResponse.put("argument", newJson.get("ISBN"));
+                        //System.out.println(jsonResponse.toString());
+                        // TODO Linia asta va fi stearsa dupa ce raspunsul de la Image Processor nu va mai fi default
+                        jsonResponse.put("ISBN", "978-0135048740");
+                        if (jsonResponse.has("success")) {
+                            if (jsonResponse.get("success").equals("NU")) {
+                                if (jsonResponse.has("message")) {
+                                    if (jsonResponse.get("message").equals("Poza neclara!Nu s-a putut identifica isbn-ul!")) {
+                                        jsonResponse = new JSONObject();
+                                        jsonResponse.put("mesajEroare", "Poza neclara");
+                                        jsonResponse.put("responseCode", "401");
+                                    }else {
+                                        jsonResponse = new JSONObject();
+                                        jsonResponse.put("mesajEroare", "Eroare interna");
+                                        jsonResponse.put("responseCode", "406");
+                                    }
+                                }
+                            } else {
+                                if (ErrorHandling.isJsonEmpty(jsonResponse, "ISBN") || !jsonResponse.has("ISBN")) {
+                                    jsonResponse = new JSONObject();
+                                    jsonResponse.put("mesajEroare", "Eroare interna");
+                                    jsonResponse.put("responseCode", "406");
+                                }
+                            }
+                        }else{
+                            jsonResponse = new JSONObject();
+                            jsonResponse.put("mesajEroare", "Eroare interna");
+                            jsonResponse.put("responseCode", "406");
+                        }
+                    }
+                }
+            }else{
+                jsonResponse =new JSONObject();
+                jsonResponse.put("mesajEroare","Eroare interna");
+                jsonResponse.put("responseCode","406");
             }
         } catch (IOException e) {
             e.printStackTrace();

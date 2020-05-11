@@ -1,5 +1,6 @@
 package CommunicationUnits;
 
+import com.validator.ErrorHandling;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -44,15 +45,33 @@ public class ReviewCollectorCU {
                 while (true) {
                     if (!((inputLine = in.readLine()) != null)) break;
                     response.append(inputLine);
-                    String error = response.substring(2, 7);
+                    /*String error = response.substring(2, 7);
                     if (error.equals("error")) {
                         //trimitere eroare la mobile app
-                    }
+                    }*/
                 }
                 System.out.println("response api review: " + response);
                 in.close();
-                jsonResponse = new JSONObject(response.toString());
-                System.out.println(jsonResponse.toString());
+                if(response.toString().equals("")) {
+                    jsonResponse =new JSONObject();
+                    jsonResponse.put("mesajEroare","Eroare interna");
+                    jsonResponse.put("responseCode","406");
+                }else {
+                    if(ErrorHandling.isValid(response.toString())) {
+                        jsonResponse = new JSONObject(response.toString());
+                        System.out.println(jsonResponse.toString());
+                        if(ErrorHandling.isJsonEmpty(jsonResponse,"reviews") || !jsonResponse.has("reviews")){
+                            jsonResponse = new JSONObject();
+                            jsonResponse.put("mesajEroare", "Nu s-au gasit review-uri");
+                            jsonResponse.put("responseCode","406");
+                        }
+                    }
+                }
+            }else{
+                jsonResponse =new JSONObject();
+                jsonResponse.put("mesajEroare", "Eroare interna");
+                jsonResponse.put("responseCode","406");
+
             }
         } catch (IOException e) {
             e.printStackTrace();

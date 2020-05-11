@@ -12,7 +12,6 @@ public class HistoryHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String historyString = null;
         if("POST".equals(httpExchange.getRequestMethod())) {
             BufferedReader postInfo = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody()));
             StringBuilder requestContents = new StringBuilder();
@@ -27,22 +26,19 @@ public class HistoryHandler implements HttpHandler {
             JSONObject json = new JSONObject(requestContents.toString());
             OutputStream outputStream = httpExchange.getResponseBody();
 
-                //json:{"username":"maria123"} -- de la mobile app
-            if (!json.has("username")) {
+            if (!json.has("method") || !json.has("username")) {
                 httpExchange.sendResponseHeaders(400, 0);
                 outputStream.close();
                 return;
             }
-            System.out.println("request History from DB");
-            historyString= DatabaseCU.requestHistory(json);
-            System.out.println(historyString);
-            //sendResponse to mobileApp
-
-            httpExchange.sendResponseHeaders(200, historyString.length());
-            outputStream.write(historyString.getBytes());
-            //outputStream.flush();
+            DatabaseCU.requestHistory(json);
+            int responseCode = (int) json.get("responseCode");
+            httpExchange.sendResponseHeaders(responseCode, 1);
+            if (responseCode == 200) {
+                outputStream.write("1".getBytes());
+            }
+            else outputStream.write("0".getBytes());
             outputStream.close();
-
         }else if("GET".equals(httpExchange.getRequestMethod())){
             System.out.println("Not Post!");
             httpExchange.sendResponseHeaders(404, 8);

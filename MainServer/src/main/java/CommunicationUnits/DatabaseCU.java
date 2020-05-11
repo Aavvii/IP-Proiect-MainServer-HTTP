@@ -1,6 +1,7 @@
 package CommunicationUnits;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.validator.ErrorHandling;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -75,54 +76,30 @@ public class DatabaseCU {
         }
     }
 
-    public static String requestHistory(JSONObject jsonObject) throws IOException {
-        String response = null;
+    public static boolean requestHistory(JSONObject jsonObject) throws IOException {
         URL obj = new URL("http://87.255.79.195:7532/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");
         postConnection.setDoOutput(true);
         JSONObject requestJson = new JSONObject();
-//        { "method":"getHistoryByUserNickname",
-//                "argument":"maria123"}//DanutCiobotaru932
         requestJson.put("method", "getHistoryByUserNickname");
-        System.out.println("argument"+jsonObject.get("username").toString());//ok
-        requestJson.put("argument", jsonObject.get("username").toString());//in fct de ce primesc de la mobile
-
+        requestJson.put("argument", jsonObject.get("nickname"));//in fct de ce primesc de la mobile
         System.out.println(requestJson.toString());
         BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
         send.write(requestJson.toString());
         send.close();
 
-
-        int responseCode = 0;
-        responseCode = postConnection.getResponseCode();
-        System.out.println("database history response code: " + responseCode);
+        int responseCode = postConnection.getResponseCode();
+        postConnection.getInputStream().close();
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
-            BufferedReader in = null;
-            try {
-                in = new BufferedReader(new InputStreamReader(postConnection.getInputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String inputLine = null;
-            StringBuffer responseSB = new StringBuffer();
-            while (true) {
-                if (!((inputLine = in.readLine()) != null)) break;
-                responseSB.append(inputLine);
-                String error = responseSB.substring(2, 7);
-                if (error.equals("error")) {
-                    //trimitere eroare la mobile app
-                }
-            }
-            System.out.println("response historyDB: " + responseSB);
-            response=responseSB.toString();
-            in.close();
+            return true;
         }
-        return response;
+        else { return false; }
     }
 
-    public static JSONObject databaseRequestReviews(JSONObject bookinfo) throws IOException {
+
+    public static JSONObject databaseRequestReviews(JSONObject jsonObject) throws IOException {
 
         client = HttpClient.newHttpClient();
         String uri = "http://localhost:9595/test";
@@ -159,93 +136,65 @@ public class DatabaseCU {
         System.out.println("  deleteBookByISBN ( 124-948-876-537-2 )");
         post(uri, post);
 */
-
-        request.put("method", "getLatestReviewByBookID");
-        // TODO: cand o sa avem metoda getReviewByBookISBN, decomenteaza urmatoarea linie
-        //  request.put("argument", bookinfo.get("ISBN"));
-        request.put("argument", "1");
-
+        if(jsonObject.has("ISBN")) {
+            request.put("method", "getLatestReviewByBookID");
+            // TODO: cand o sa avem metoda getReviewByBookISBN, decomenteaza urmatoarea linie
+            //  request.put("argument", bookinfo.get("ISBN"));
+            request.put("argument", "1");
+        }else{
+            if(jsonObject.has("reviews")){
+                //trimitem reviews
+                //TODO facem functie aici sau separat?
+            }
+        }
+        JSONObject JsonResponse = null;
         postData=request.toString();
         //System.out.println(postData);
         String response = post(uri, postData);
+        if(response.equalsIgnoreCase("internalError") || response.equalsIgnoreCase("noReviews")){
+            JsonResponse = new JSONObject("{}");
+        }
+        if (ErrorHandling.isValid(response)) {
+            JsonResponse = new JSONObject(response);
+            if(ErrorHandling.isJsonEmpty(JsonResponse,"reviews") || !JsonResponse.has("reviews")){
+                JsonResponse = new JSONObject("{}");
+            }
+        }
 
-        JSONObject JsonResponse = new JSONObject(response);
+
         return JsonResponse;
     }
+    // TODO FUNCTIE PENTRU TRIMIS REVIEWS -SEPARAT?
 
     static String post(String uri, String data) throws IOException {
+        String responseString = null;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri))
                 .POST(HttpRequest.BodyPublishers.ofString(data))
                 .build();
-        HttpResponse response = null;
+        HttpResponse response =null;
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            responseString=response.body().toString();
+            if(response.body().toString().substring(0,23).equalsIgnoreCase("ObjectNotFoundException")){
+                responseString ="noReviews";
+            }
+            if(response.body().toString().equalsIgnoreCase("Method does not exist!")){
+                responseString = "internalError";
+            }
+
+
             //System.out.println(response.body());
         } catch (IOException e) {
-
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        return response.body().toString();
-    }
-    /*public static JSONObject databaseRequestReviews(JSONObject bookInformation) throws IOException {
-        JSONObject jsonResponse = null;
-       // URL obj = new URL(new URL("http://localhost:9595/"), "test/");
-        URL obj = new URL("http://reviewinatorserver.chickenkiller.com:6969/test");
-        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
-        postConnection.setRequestMethod("POST");
-        postConnection.setRequestProperty("content-type", "application/json");
-        postConnection.setDoOutput(true);
-        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
-        send.write(bookInformation.toString());
-        send.close();
-
-        int responseCode = postConnection.getResponseCode();
-        System.out.println("Database response code: " + responseCode);
-        if (responseCode == HttpURLConnection.HTTP_OK) { //success
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    postConnection.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            jsonResponse = new JSONObject(response.toString());
-
+        if(response == null){
+            responseString="internalError";
         }
-
-        return jsonResponse;
+        return responseString;
     }
 
-    //am zis ca trimitem o lista de JSONuri reviewurile.We dont know yet
-    public static JSONObject sendReviews(JSONObject reviews) throws IOException, InterruptedException {
-        URL obj = new URL(new URL("http://localhost:9595/"), "test/");
-        JSONObject returnJson = null;
-//        URL obj = new URL("localhost:9595/test");
-        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
-        postConnection.setRequestMethod("POST");
-        postConnection.setRequestProperty("content-type", "application/json");
-        postConnection.setDoOutput(true);
-        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
-        send.write(reviews.toString());
-        send.close();
-        int responseCode = postConnection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) { //success
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    postConnection.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            returnJson = new JSONObject(response.toString());
-
-        }
-        return returnJson;
-    }*/
 }
