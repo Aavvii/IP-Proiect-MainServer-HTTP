@@ -65,7 +65,7 @@ public class MobileAppCU implements HttpHandler {
 
 
         // this line is a must
-        httpExchange.sendResponseHeaders(200, response.length());
+        httpExchange.sendResponseHeaders(200, response.getBytes().length);
         //in loc de htmlResponse va fi un String/JSON reprezentand raspunsul
         outputStream.write(response.getBytes());
         outputStream.flush();
