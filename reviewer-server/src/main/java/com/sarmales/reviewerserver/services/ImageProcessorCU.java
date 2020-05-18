@@ -17,9 +17,9 @@ public class ImageProcessorCU {
 //trimitem imaginea catre imageProcessorCU(e parametrul functiei-adica imaginea de la mobile app)
     //si primim titlul si autorul si l returnam ca json object pentru a fi folosit ulterior
     /*
-    * {"ISBN": "978-606-623-2", "author": "JRR Tolkien", "message": "decoded",
-    * "success": "ok", "title": "Silmarilion"}
-    */
+     * {"ISBN": "978-606-623-2", "author": "JRR Tolkien", "message": "decoded",
+     * "success": "ok", "title": "Silmarilion"}
+     */
 
     public static JSONObject requestBookInfo(String imagineJson) {
         JSONObject jsonResponse = null;
@@ -56,18 +56,13 @@ public class ImageProcessorCU {
                 }
                 System.out.println("ImageProcesorCU response:" + response.toString());
                 in.close();
-                if(response.toString().equals("")) {
-                    jsonResponse =new JSONObject();
-                    jsonResponse.put("mesajEroare","Eroare interna");
-                    jsonResponse.put("responseCode","406");
-                }
-                else {
-                    //JSONObject newJson = new JSONObject(response.toString());
+                if (response.toString().equals("")) {
+                    jsonResponse = new JSONObject();
+                    jsonResponse.put("mesajEroare", "Nu am primit niciun raspuns de la Image Processor.");
+                    jsonResponse.put("responseCode", "408");
+                } else {
                     if (ErrorHandling.isValid(response.toString())) {
                         jsonResponse = new JSONObject(response.toString());
-                        //jsonResponse.put("method", "getBookByISBN");
-                        //jsonResponse.put("argument", newJson.get("ISBN"));
-                        //System.out.println(jsonResponse.toString());
                         // TODO Linia asta va fi stearsa dupa ce raspunsul de la Image Processor nu va mai fi default
 //                        jsonResponse.put("ISBN", "978-0135048740");
                         if (jsonResponse.has("success")) {
@@ -77,30 +72,40 @@ public class ImageProcessorCU {
                                         jsonResponse = new JSONObject();
                                         jsonResponse.put("mesajEroare", "Poza neclara");
                                         jsonResponse.put("responseCode", "401");
-                                    }else {
+                                    } else {
                                         jsonResponse = new JSONObject();
-                                        jsonResponse.put("mesajEroare", "Eroare interna");
-                                        jsonResponse.put("responseCode", "406");
+                                        jsonResponse.put("mesajEroare", "Nu s-a reusit procesarea imaginii.");
+                                        jsonResponse.put("responseCode", "409");
                                     }
+                                } else {
+                                    jsonResponse = new JSONObject();
+                                    jsonResponse.put("mesajEroare", "Nu s-a reusit procesarea imaginii.");
+                                    jsonResponse.put("responseCode", "409");
                                 }
                             } else {
+                                //succes da - verificam daca avem ceva in isbn sau daca avem cheia isbn
                                 if (ErrorHandling.isJsonEmpty(jsonResponse, "ISBN") || !jsonResponse.has("ISBN")) {
                                     jsonResponse = new JSONObject();
-                                    jsonResponse.put("mesajEroare", "Eroare interna");
-                                    jsonResponse.put("responseCode", "406");
+                                    jsonResponse.put("mesajEroare", "Nu s-a reusit procesarea imaginii.");
+                                    jsonResponse.put("responseCode", "409");
                                 }
                             }
-                        }else{
+                        } else {
                             jsonResponse = new JSONObject();
-                            jsonResponse.put("mesajEroare", "Eroare interna");
-                            jsonResponse.put("responseCode", "406");
+                            jsonResponse.put("mesajEroare", "Nu s-a reusit procesarea imaginii.");
+                            jsonResponse.put("responseCode", "409");
                         }
+                    } else {
+                        jsonResponse = new JSONObject();
+                        jsonResponse.put("mesajEroare", "Nu s-a reusit procesarea imaginii.");
+                        jsonResponse.put("responseCode", "409");
+
                     }
                 }
-            }else{
-                jsonResponse =new JSONObject();
-                jsonResponse.put("mesajEroare","Eroare interna");
-                jsonResponse.put("responseCode","406");
+            } else {
+                jsonResponse = new JSONObject();
+                jsonResponse.put("mesajEroare", "Eroare conexiune Image Processor.");
+                jsonResponse.put("responseCode", "407");
             }
         } catch (IOException e) {
             e.printStackTrace();

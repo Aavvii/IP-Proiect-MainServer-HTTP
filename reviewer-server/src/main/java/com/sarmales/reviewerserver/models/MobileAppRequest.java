@@ -2,29 +2,22 @@ package com.sarmales.reviewerserver.models;
 
 public class MobileAppRequest {
     private String encoding;
-    private long isbn;
+    private String isbn;
 
     public MobileAppRequest() {
     }
-
-    public MobileAppRequest(long isbn) {
-        this.isbn = isbn;
-    }
-
-    public MobileAppRequest(String encoding) {
+    public MobileAppRequest(String encoding, String isbn) {
         this.encoding = encoding;
-    }
-
-    public long getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(long isbn) {
         this.isbn = isbn;
     }
-
     public String getEncoding() {
         return encoding;
+    }
+    public String getIsbn() {
+        return isbn;
+    }
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public void setEncoding(String encoding) {

@@ -22,7 +22,7 @@ public class ReviewsController {
         JSONObject response = new JSONObject(communication.getOutput());
         if (response.has("mesajEroare")) {
             int statusCode = Integer.parseInt(response.get("responseCode").toString());
-            String errMsg = response.get("mesajEroare").toString();
+            String errMsg = response.toString();
             return ResponseEntity.status(statusCode).body(errMsg);
         }
         else {

@@ -54,30 +54,30 @@ public class ReviewCollectorCU {
                 in.close();
                 if(response.toString().equals("")) {
                     jsonResponse =new JSONObject();
-                    jsonResponse.put("mesajEroare","Eroare interna");
-                    jsonResponse.put("responseCode","406");
+                    jsonResponse.put("mesajEroare","Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
+                    jsonResponse.put("ISBN",ISBN);
+                    jsonResponse.put("responseCode","411");
                 }else {
                     if(ErrorHandling.isValid(response.toString())) {
                         jsonResponse = new JSONObject(response.toString());
                         System.out.println(jsonResponse.toString());
                         if(ErrorHandling.isJsonEmpty(jsonResponse,"reviews") || !jsonResponse.has("reviews")){
-                            jsonResponse = new JSONObject();
-                            jsonResponse.put("mesajEroare", "Nu s-au gasit review-uri");
-                            jsonResponse.put("responseCode","406");
+                            jsonResponse =new JSONObject();
+                            jsonResponse.put("mesajEroare","Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
+                            jsonResponse.put("ISBN",ISBN);
+                            jsonResponse.put("responseCode","411");
                         }
-                    }
-                    else{
+                    } else{
                         jsonResponse =new JSONObject();
-                        jsonResponse.put("mesajEroare", "Eroare interna");
-                        jsonResponse.put("responseCode","406");
-
+                        jsonResponse.put("mesajEroare","Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
+                        jsonResponse.put("ISBN",ISBN);
+                        jsonResponse.put("responseCode","411");
                     }
                 }
             }else{
                 jsonResponse =new JSONObject();
-                jsonResponse.put("mesajEroare", "Eroare interna");
-                jsonResponse.put("responseCode","406");
-
+                jsonResponse.put("mesajEroare", "Eroare conexiune Review Collector.");
+                jsonResponse.put("responseCode","410");
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -25,19 +25,17 @@ public class MasterCU {
     public void prepareResponse() {
         JSONObject inputJSON = new JSONObject(input);
         JSONObject bookInfo = null;
-        Integer code = (Integer) inputJSON.get("isbn");
-        if (inputJSON.has("isbn") && code != 0) {
+        if (inputJSON.has("isbn") && !inputJSON.get("isbn").toString().equals("")) {
             imgProcFlag = false;
             bookInfo = new JSONObject();
             bookInfo.put("ISBN", inputJSON.get("isbn").toString());
             System.out.println(bookInfo.get("ISBN"));
         }
-       else if (ErrorHandling.isValid(input)) {
-
+        else if (ErrorHandling.isValid(input)) {
             System.out.println();
-           // System.out.println(inputJSON.toString());
+            // System.out.println(inputJSON.toString());
 
-           if (ErrorHandling.isJsonEmpty(inputJSON,"encoding") || !inputJSON.has("encoding")) {
+            if (ErrorHandling.isJsonEmpty(inputJSON,"encoding")) {
                 flag = false;
                 errorMsg = new JSONObject();
                 errorMsg.put("mesajEroare", "JSON gol");
@@ -103,7 +101,7 @@ public class MasterCU {
                         errorMsg = new JSONObject(bookInfo.toString());
                         output = errorMsg.toString();
                     }
-                    System.out.println("REVIEWS DE LA CRAWLER : " + bookInfo);
+                    System.out.println("REVIEWS DE LA CRAWLER : " + bookReviews.toString());
 
                     //TODO  DatabaseCU.sendReviews(bookReviews);
                 } catch (IOException | InterruptedException e) {
