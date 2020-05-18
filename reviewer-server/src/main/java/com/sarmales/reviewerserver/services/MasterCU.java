@@ -25,11 +25,12 @@ public class MasterCU {
     public void prepareResponse() {
         JSONObject inputJSON = new JSONObject(input);
         JSONObject bookInfo = null;
-        if (inputJSON.has("isbn")) {
+        Integer code = (Integer) inputJSON.get("isbn");
+        if (inputJSON.has("isbn") && code != 0) {
             imgProcFlag = false;
             bookInfo = new JSONObject();
             bookInfo.put("ISBN", inputJSON.get("isbn").toString());
-            System.out.println(bookInfo.get("isbn"));
+            System.out.println(bookInfo.get("ISBN"));
         }
        else if (ErrorHandling.isValid(input)) {
 
@@ -55,7 +56,8 @@ public class MasterCU {
         JSONObject dbReviewsResponse = null;
         JSONObject bookReviews = null;
         if(flag && imgProcFlag) {
-            bookInfo = ImageProcessorCU.requestBookInfo(input);
+            inputJSON.remove("isbn");
+            bookInfo = ImageProcessorCU.requestBookInfo(inputJSON.toString());
             if (bookInfo.has("mesajEroare")) {
                 flag = false;
                 errorMsg = new JSONObject(bookInfo.toString());
