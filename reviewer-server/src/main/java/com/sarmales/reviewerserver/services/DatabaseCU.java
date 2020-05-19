@@ -150,16 +150,17 @@ public class DatabaseCU {
         JSONObject requestJson = new JSONObject();
 //        { "method":"getHistoryByUserNickname",
 //                "argument":"maria123"}//DanutCiobotaru932
-        requestJson.put("method", "getHistoryByUserNickname");
-        System.out.println("argument"+jsonObject.get("username").toString());//ok
-        requestJson.put("argument", jsonObject.get("username").toString());//in fct de ce primesc de la mobile
+        System.out.println(jsonObject.toString());
+        requestJson.put("method", "getAllBooksReviewsByNickname");
+        System.out.println("argument"+jsonObject.get("nickname").toString());//ok
+        requestJson.put("argument", jsonObject.get("nickname").toString());//in fct de ce primesc de la mobile
 
         System.out.println(requestJson.toString());
         BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
         send.write(requestJson.toString());
         send.close();
 
-
+        System.out.println("aici");
         int responseCode = 0;
         responseCode = postConnection.getResponseCode();
         System.out.println("database history response code: " + responseCode);
