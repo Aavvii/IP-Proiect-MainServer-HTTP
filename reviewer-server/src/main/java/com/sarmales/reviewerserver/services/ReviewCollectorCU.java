@@ -3,6 +3,7 @@ package com.sarmales.reviewerserver.services;
 
 import org.json.JSONObject;
 import com.sarmales.reviewerserver.handler.ErrorHandling;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,10 +16,11 @@ public class ReviewCollectorCU {
 
     public static JSONObject requestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
         JSONObject jsonResponse = null;
+        String ISBN=null;
         URL obj = null;
         try {
             System.out.println("bookInformation: " + bookInformation);//ok
-            String ISBN = bookInformation.get("ISBN").toString();
+            ISBN = bookInformation.get("ISBN").toString();
             ISBN = ISBN.replaceAll("[^0-9]", "");
             System.out.println("isbn : " + ISBN);
             obj = new URL("http://stefanbeleuz.pythonanywhere.com/review/goodreads?isbn=" + ISBN);//ok
@@ -52,32 +54,36 @@ public class ReviewCollectorCU {
                 }
                 System.out.println("response api review: " + response);
                 in.close();
-                if(response.toString().equals("")) {
-                    jsonResponse =new JSONObject();
-                    jsonResponse.put("mesajEroare","Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
-                    jsonResponse.put("ISBN",ISBN);
-                    jsonResponse.put("responseCode","411");
-                }else {
-                    if(ErrorHandling.isValid(response.toString())) {
-                        jsonResponse = new JSONObject(response.toString());
+                if (response.toString().equals("")) {
+                    jsonResponse = new JSONObject();
+                    jsonResponse.put("mesajEroare", "Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
+                    jsonResponse.put("ISBN", ISBN);
+                    jsonResponse.put("responseCode", "411");
+                } else {
+                    if (ErrorHandling.isValid(response.toString())) {
+                        jsonResponse = new JSONObject();
+                        jsonResponse.put("isbn",ISBN);
+                        JSONObject json1 = new JSONObject(response.toString());
+                        jsonResponse.put("overall_rating",json1.get("overall_rating"));
+                       jsonResponse.put("reviews", json1.get("reviews"));
                         System.out.println(jsonResponse.toString());
-                        if(ErrorHandling.isJsonEmpty(jsonResponse,"reviews") || !jsonResponse.has("reviews")){
-                            jsonResponse =new JSONObject();
-                            jsonResponse.put("mesajEroare","Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
-                            jsonResponse.put("ISBN",ISBN);
-                            jsonResponse.put("responseCode","411");
+                        if (ErrorHandling.isJsonEmpty(jsonResponse, "reviews") || !jsonResponse.has("reviews")) {
+                            jsonResponse = new JSONObject();
+                            jsonResponse.put("mesajEroare", "Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
+                            jsonResponse.put("ISBN", ISBN);
+                            jsonResponse.put("responseCode", "411");
                         }
-                    } else{
-                        jsonResponse =new JSONObject();
-                        jsonResponse.put("mesajEroare","Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
-                        jsonResponse.put("ISBN",ISBN);
-                        jsonResponse.put("responseCode","411");
+                    } else {
+                        jsonResponse = new JSONObject();
+                        jsonResponse.put("mesajEroare", "Nu s-au gasit review-uri pentru ISBN-ul : " + ISBN);
+                        jsonResponse.put("ISBN", ISBN);
+                        jsonResponse.put("responseCode", "411");
                     }
                 }
-            }else{
-                jsonResponse =new JSONObject();
+            } else {
+                jsonResponse = new JSONObject();
                 jsonResponse.put("mesajEroare", "Eroare conexiune Review Collector.");
-                jsonResponse.put("responseCode","410");
+                jsonResponse.put("responseCode", "410");
             }
         } catch (IOException e) {
             e.printStackTrace();
