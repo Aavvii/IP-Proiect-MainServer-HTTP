@@ -15,16 +15,29 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/user/history")
+//{"username":"DanutCiobotaru932"} ..daca are "nickname" ni l da ca empty json {}
 public class HistoryController {
     @PostMapping
     public ResponseEntity<String> requestLogin(@RequestBody HistoryRequest request) {
         try {
             JSONObject json = new JSONObject(request);
-            String historyFromDB= DatabaseCU.requestHistory(json);
-            int responseCode = Integer.parseInt(json.get("responseCode").toString());
-            //de verificat response code
             System.out.println(json.toString());
-            return ResponseEntity.status(responseCode).body(historyFromDB);
+            String historyFromDB= DatabaseCU.requestHistory(json);
+
+            String string[] = historyFromDB.split("~");
+            List<String> arrayOfReviews = new ArrayList<String>();
+            arrayOfReviews = Arrays.asList(string);
+            JSONArray ja = new JSONArray();
+            for (String s : arrayOfReviews) {
+                JSONObject jsonObject = new JSONObject(s);
+                ja.put(jsonObject);
+            }
+            JSONObject mainJson = new JSONObject();
+            mainJson.put("history", ja);
+            System.out.println(mainJson.toString());
+            return ResponseEntity.status(200).body(mainJson.toString());
+
+           // return ResponseEntity.status(200).body(historyFromDB);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
