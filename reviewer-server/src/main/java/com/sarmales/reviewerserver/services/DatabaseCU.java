@@ -78,6 +78,58 @@ public class DatabaseCU {
             return false;
         }
     }
+        public static JSONObject formatJson(String reviewsDatabase,String rating) {
+
+        String str[] = reviewsDatabase.split("~");
+        List<String> al = new ArrayList<String>();
+        al = Arrays.asList(str);
+        JSONArray ja = new JSONArray();
+        for (String s : al) {
+            JSONObject jsonObject = new JSONObject(s);
+            ja.put(jsonObject);
+        }
+        JSONObject mainJson = new JSONObject();
+        mainJson.put("reviews",ja);
+        mainJson.put("overall_rating",rating);
+        return mainJson;
+
+    }
+
+    public static String getRating(String isbn) throws IOException {
+        URL obj = new URL("http://92.80.203.112:9595/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setDoOutput(true);
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("method", "getAverageRatingByBookISBN");
+        requestJson.put("argument", isbn);
+        //System.out.println(requestJson.toString());
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(requestJson.toString());
+        send.close();
+
+        int responseCode = postConnection.getResponseCode();
+       // postConnection.getInputStream().close();
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new InputStreamReader(postConnection.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String inputLine = null;
+            StringBuffer response = new StringBuffer();
+            while (true) {
+                if (!((inputLine = in.readLine()) != null)) break;
+                response.append(inputLine);
+            }
+            System.out.println("ImageProcesorCU response:" + response.toString());
+            in.close();
+            return response.toString();
+        }
+        return "error";
+    }
 
     public static String requestHistory(JSONObject jsonObject) throws IOException {
         String response = null;
