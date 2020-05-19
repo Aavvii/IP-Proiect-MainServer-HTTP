@@ -157,12 +157,14 @@ public class DatabaseCU {
         if(response.equalsIgnoreCase("internalError") || response.equalsIgnoreCase("noReviews")){
             JsonResponse = new JSONObject("{}");
         }
-//        if (ErrorHandling.isValid(response)) {
-//            JsonResponse = new JSONObject(response);
-//            if(ErrorHandling.isJsonEmpty(JsonResponse,"reviews") || !JsonResponse.has("reviews")){
-//                JsonResponse = new JSONObject("{}");
-//            }
-//        }
+      if (ErrorHandling.isValid(response)) {
+           JsonResponse = new JSONObject(response);
+           JsonResponse = new JSONObject(response);
+           JsonResponse.put("isbn",jsonObject.get("ISBN"));
+         if(ErrorHandling.isJsonEmpty(JsonResponse,"reviews") || !JsonResponse.has("reviews")){
+             JsonResponse = new JSONObject("{}");
+           }
+       }
 
 
         return JsonResponse;
