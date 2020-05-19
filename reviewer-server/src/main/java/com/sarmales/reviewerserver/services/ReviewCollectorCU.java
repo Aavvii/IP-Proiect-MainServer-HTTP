@@ -59,7 +59,11 @@ public class ReviewCollectorCU {
                     jsonResponse.put("responseCode","411");
                 }else {
                     if(ErrorHandling.isValid(response.toString())) {
-                        jsonResponse = new JSONObject(response.toString());
+                        jsonResponse = new JSONObject();
+                         jsonResponse.put("isbn",ISBN);
+                        JSONObject json1 = new JSONObject(response.toString());
+                        jsonResponse.put("overall_rating",json1.get("overall_rating"));
+                       jsonResponse.put("reviews", json1.get("reviews"));
                         System.out.println(jsonResponse.toString());
                         if(ErrorHandling.isJsonEmpty(jsonResponse,"reviews") || !jsonResponse.has("reviews")){
                             jsonResponse =new JSONObject();
