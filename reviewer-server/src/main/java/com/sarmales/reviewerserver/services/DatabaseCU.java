@@ -1,9 +1,10 @@
 package com.sarmales.reviewerserver.services;
 
+//import com.validator.ErrorHandling;
 
-import com.sarmales.reviewerserver.handler.ErrorHandling;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -13,11 +14,9 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 public class DatabaseCU {
@@ -29,7 +28,7 @@ public class DatabaseCU {
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");
-        postConnection.setConnectTimeout(10000);
+        postConnection.setConnectTimeout(3000);
         postConnection.setDoOutput(true);
         in.put("method", "getUserByNickname");
         in.put("argument", in.get("username"));
@@ -86,58 +85,6 @@ public class DatabaseCU {
             return false;
         }
     }
-        public static JSONObject formatJson(String reviewsDatabase,String rating) {
-
-        String str[] = reviewsDatabase.split("~");
-        List<String> al = new ArrayList<String>();
-        al = Arrays.asList(str);
-        JSONArray ja = new JSONArray();
-        for (String s : al) {
-            JSONObject jsonObject = new JSONObject(s);
-            ja.put(jsonObject);
-        }
-        JSONObject mainJson = new JSONObject();
-        mainJson.put("reviews",ja);
-        mainJson.put("overall_rating",rating);
-        return mainJson;
-
-    }
-
-    public static String getRating(String isbn) throws IOException {
-        URL obj = new URL("http://92.80.203.112:9595/test");
-        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
-        postConnection.setRequestMethod("POST");
-        postConnection.setRequestProperty("content-type", "application/json");
-        postConnection.setDoOutput(true);
-        JSONObject requestJson = new JSONObject();
-        requestJson.put("method", "getAverageRatingByBookISBN");
-        requestJson.put("argument", isbn);
-        //System.out.println(requestJson.toString());
-        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
-        send.write(requestJson.toString());
-        send.close();
-
-        int responseCode = postConnection.getResponseCode();
-       // postConnection.getInputStream().close();
-        if (responseCode == HttpURLConnection.HTTP_OK) { //success
-            BufferedReader in = null;
-            try {
-                in = new BufferedReader(new InputStreamReader(postConnection.getInputStream()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String inputLine = null;
-            StringBuffer response = new StringBuffer();
-            while (true) {
-                if (!((inputLine = in.readLine()) != null)) break;
-                response.append(inputLine);
-            }
-            System.out.println("ImageProcesorCU response:" + response.toString());
-            in.close();
-            return response.toString();
-        }
-        return "error";
-    }
 
     public static String requestHistory(JSONObject jsonObject) throws IOException {
         String response = null;
@@ -190,72 +137,249 @@ public class DatabaseCU {
 
 
     public static JSONObject databaseRequestReviews(JSONObject jsonObject) throws IOException {
+        JSONObject json = new JSONObject("{\"responseCode\" : 200}");
 
-        client = HttpClient.newHttpClient();
-        String uri ="http://92.80.203.112:9595/test";
+        URL obj = new URL("http://92.80.203.112:9595/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setConnectTimeout(3000);
+        postConnection.setDoOutput(true);
+        json.put("method", "getReviewsByBookISBN");
+        String bookIsbn = jsonObject.get("ISBN").toString();
+        json.put("argument", bookIsbn);
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(json.toString());
+        send.close();
 
-
-        JSONObject request = new JSONObject();
-        String postData = null;
-
-        /*System.out.println();
-        request.put("method", "getBookByISBN");
-        request.put("argument", "341-497-344-670-2");
-        post = request.toString();
-        System.out.println("  getBookByISBN ( 341-497-344-670-2 )");
-        post(uri, post);
-
-        System.out.println();
-        request.put("method", "getBooksByAuthor");
-        request.put("argument", "Enid Blyton");
-        post = request.toString();
-        System.out.println("  getBooksByAuthor ( Enid Blyton )");
-        post(uri, post);
-
-        System.out.println();
-        request.put("method", "getBooksByGenre");
-        request.put("argument", "Fictiune");
-        post = request.toString();
-        System.out.println("  getBooksByGenre ( Fictiune )");
-        post(uri, post);
-
-        System.out.println();
-        request.put("method", "deleteBookByISBN");
-        request.put("argument", "124-948-876-537-2");
-        post = request.toString();
-        System.out.println("  deleteBookByISBN ( 124-948-876-537-2 )");
-        post(uri, post);
-*/
-        if(jsonObject.has("ISBN")) {
-            request.put("method", "getLatestReviewByBookID");
-            // TODO: cand o sa avem metoda getReviewByBookISBN, decomenteaza urmatoarea linie
-            //  request.put("argument", bookinfo.get("ISBN"));
-            request.put("argument", "1");
-        }else{
-            if(jsonObject.has("reviews")){
-                //trimitem reviews
-                //TODO facem functie aici sau separat?
+        json.remove("method"); json.remove("argument");
+        int responseCode = postConnection.getResponseCode();
+        json.put("responseCode", responseCode);
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader input = new BufferedReader(new InputStreamReader(
+                    postConnection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = input.readLine()) != null) {
+                response.append(inputLine);
             }
-        }
-        JSONObject JsonResponse = null;
-        postData=request.toString();
-        //System.out.println(postData);
-        String response = post(uri, postData);
-        if(response.equalsIgnoreCase("internalError") || response.equalsIgnoreCase("noReviews")){
-            JsonResponse = new JSONObject("{}");
-        }
-      if (ErrorHandling.isValid(response)) {
-          JsonResponse = new JSONObject(response);
-           JsonResponse.put("isbn",jsonObject.get("ISBN"));
-          if(ErrorHandling.isJsonEmpty(JsonResponse,"reviews") || !JsonResponse.has("reviews")){
-              JsonResponse = new JSONObject("{}");
-          }
-      }
+            input.close();
 
-
-        return JsonResponse;
+            String rating = getRating(bookIsbn);
+            json = formatJson(response.toString(), rating);
+            json.put("responseCode", responseCode);
+        }
+        return json;
     }
-    // TODO FUNCTIE PENTRU TRIMIS REVIEWS -SEPARAT?
+
+    public static boolean addBook(String isbn, String rating) throws IOException {
+        JSONObject in = new JSONObject();
+        URL obj = new URL("http://92.80.203.112:9595/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setConnectTimeout(3000);
+        postConnection.setDoOutput(true);
+
+        JSONObject bookInfo = new JSONObject();
+        bookInfo.put("title", "ceva");
+        bookInfo.put("author", "Smecheru");
+        bookInfo.put("genre", "nic");
+        bookInfo.put("pageNr", 2);
+        bookInfo.put("isbn", isbn);
+        bookInfo.put("avgRating", Float.parseFloat(rating));
+        bookInfo.put("resume", "ok");
+
+        in.put("method", "addBook");
+        in.put("argument", bookInfo);
+
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(in.toString());
+        send.close();
+
+        int responseCode = postConnection.getResponseCode();
+        postConnection.getInputStream().close();
+        //success
+        return responseCode == HttpURLConnection.HTTP_OK;
+    }
+
+    public static boolean addHistory(int userId, int bookId) throws IOException {
+        JSONObject in = new JSONObject();
+        URL obj = new URL("http://92.80.203.112:9595/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setConnectTimeout(3000);
+        postConnection.setDoOutput(true);
+
+        JSONObject historyInfo = new JSONObject();
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+        Date today = new Date();
+        historyInfo.put("userId", userId);
+        historyInfo.put("visitedBookId", bookId);
+        historyInfo.put("visitationDate", df.format(today));
+
+        in.put("method", "addHistory");
+        in.put("argument", historyInfo);
+
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(in.toString());
+        send.close();
+
+        int responseCode = postConnection.getResponseCode();
+        postConnection.getInputStream().close();
+        //success
+        return responseCode == HttpURLConnection.HTTP_OK;
+    }
+
+    public static void addReviews(JSONObject json, int userId, int bookId) throws IOException {
+        JSONObject in = new JSONObject();
+        URL obj = new URL("http://92.80.203.112:9595/test");
+        in.put("method", "addReview");
+        JSONArray jsonArray = (JSONArray) json.get("reviews");
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+        Date today = new Date();
+        //Iterating the contents of the array
+        for (Object o : jsonArray) {
+            HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+            postConnection.setRequestMethod("POST");
+            postConnection.setRequestProperty("content-type", "application/json");
+            postConnection.setConnectTimeout(3000);
+            postConnection.setDoOutput(true);
+            String userRating = ((JSONObject) o).get("rating").toString();
+            float rating;
+            if (userRating.equals("Not available")) rating = 0;
+            else rating = Float.parseFloat(userRating);
+            System.out.println(rating);
+            JSONObject reviewInfo = new JSONObject();
+            reviewInfo.put("userId", userId);
+            reviewInfo.put("bookId", bookId);
+            reviewInfo.put("rating", rating);
+            reviewInfo.put("reviewText", ((JSONObject) o).get("description").toString());
+            reviewInfo.put("date", df.format(today));
+            in.put("argument", reviewInfo);
+            System.out.println(in.toString());
+            BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+            send.write(in.toString());
+            send.close();
+            postConnection.getResponseCode();
+            postConnection.getInputStream().close();
+        }
+    }
+
+    public static int getUserId(String nickname) throws IOException {
+        JSONObject in = new JSONObject();
+        URL obj = new URL("http://92.80.203.112:9595/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setConnectTimeout(3000);
+        postConnection.setDoOutput(true);
+        in.put("method", "getUserByNickname");
+        in.put("argument", nickname);
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(in.toString());
+        send.close();
+        int responseCode = postConnection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader input = new BufferedReader(new InputStreamReader(
+                    postConnection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = input.readLine()) != null) {
+                response.append(inputLine);
+            }
+            input.close();
+
+            JSONObject responseJson = new JSONObject(response.toString());
+            return (Integer) responseJson.get("id");
+        }
+        //success
+        return -1;
+    }
+
+    public static int getBookId(String isbn) throws IOException {
+        JSONObject in = new JSONObject();
+        URL obj = new URL("http://92.80.203.112:9595/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setConnectTimeout(3000);
+        postConnection.setDoOutput(true);
+        in.put("method", "getBookByISBN");
+        in.put("argument", isbn);
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(in.toString());
+        send.close();
+        int responseCode = postConnection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader input = new BufferedReader(new InputStreamReader(
+                    postConnection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = input.readLine()) != null) {
+                response.append(inputLine);
+            }
+            input.close();
+
+            JSONObject responseJson = new JSONObject(response.toString());
+            return (Integer) responseJson.get("id");
+        }
+        //success
+        return -1;
+    }
+
+    public static String getRating(String isbn) throws IOException {
+        URL obj = new URL("http://92.80.203.112:9595/test");
+        HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
+        postConnection.setRequestMethod("POST");
+        postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setDoOutput(true);
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("method", "getAverageRatingByBookISBN");
+        requestJson.put("argument", isbn);
+        //System.out.println(requestJson.toString());
+        BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
+        send.write(requestJson.toString());
+        send.close();
+
+        int responseCode = postConnection.getResponseCode();
+        // postConnection.getInputStream().close();
+        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new InputStreamReader(postConnection.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String inputLine = null;
+            StringBuffer response = new StringBuffer();
+            while (true) {
+                if (!((inputLine = in.readLine()) != null)) break;
+                response.append(inputLine);
+            }
+            System.out.println("ImageProcesorCU response:" + response.toString());
+            in.close();
+            return response.toString();
+        }
+        return "error";
+    }
+
+    public static JSONObject formatJson(String reviewsDatabase,String rating) {
+
+        String[] str = reviewsDatabase.split("~");
+        List<String> al;
+        al = Arrays.asList(str);
+        JSONArray ja = new JSONArray();
+        for (String s : al) {
+            JSONObject jsonObject = new JSONObject(s);
+            ja.put(jsonObject);
+        }
+        JSONObject mainJson = new JSONObject();
+        mainJson.put("reviews",ja);
+        mainJson.put("overall_rating",rating);
+        return mainJson;
+    }
 
     static String post(String uri, String data) throws IOException {
         String responseString = null;

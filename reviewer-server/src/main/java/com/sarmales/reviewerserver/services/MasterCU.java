@@ -3,6 +3,7 @@ package com.sarmales.reviewerserver.services;
 import com.sarmales.reviewerserver.handler.ErrorHandling;
 import org.json.JSONObject;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 
 /**
@@ -24,11 +25,12 @@ public class MasterCU {
     boolean imgProcFlag = true;
     boolean isbnFound = true;
     JSONObject errorMsg = null;
-    JSONObject dbReviewsResponse = null;
-    JSONObject bookReviews = null;
 
     public void prepareResponse() throws IOException, InterruptedException {
         JSONObject inputJSON = new JSONObject(input);
+        String username = inputJSON.get("nickname").toString();
+        int userId = DatabaseCU.getUserId(username);
+        System.out.println("user id: " + userId);
         JSONObject bookInfo = null;
         //Caz1: Nu am trimis un isbn la mobile app : ISBN:"9780735623873" -ok
         if (inputJSON.has("isbn") && !inputJSON.get("isbn").toString().equals("")) {
@@ -55,9 +57,6 @@ public class MasterCU {
             errorMsg.put("responseCode", "402");
         }
 
-        // TODO System.out.println(inputJSON);
-        // TODO JSONObject bookInfo = ImageProcessorCU.requestBookInfo(inputJSON);
-
         JSONObject dbReviewsResponse = null;
         JSONObject bookReviews = null;
         if (flag && imgProcFlag) {
@@ -73,23 +72,6 @@ public class MasterCU {
         System.out.println(flag);
   /*      //System.out.println(bookInfo);
 
-        //input hardcodat care merge
-        //JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-606-623-2\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
-
-//Caz 1: eroare la beleuz
-        //JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-0135048740\", \"author\": \"JRR Tolkien\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"Silmarilion\"}");
-//Caz 2: should work
-        //JSONObject bookInfo = new JSONObject("{\"ISBN\": \"978-006-092-043-2\", \"author\": \"Andy Mitchell\", \"message\": \"decoded\", \"success\": \"DA\", \"title\": \"\"}");
-
-
-        DBClient client = new DBClient();
-        try {
-            DBClient.dod();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-//        System.out.println("bookInfo"+bookInfo);
        try {
             dbReviewsResponse = DatabaseCU.databaseRequestReviews(bookInfo);
             //System.out.println("aici");
@@ -101,11 +83,20 @@ public class MasterCU {
         String bookISBN = null;
         String errorMessage = null;
         System.out.println("bookInfo: " + bookInfo);
-        System.out.println("REVIEWS DIN DATABASE : " + dbReviewsResponse);
-        if (flag) {
+//        System.out.println("REVIEWS DIN DATABASE : " + dbReviewsResponse);
+        if (flag || !imgProcFlag) {
+
+            JSONObject getRevResponse = DatabaseCU.databaseRequestReviews(bookInfo);
+            bookISBN = bookInfo.get("ISBN").toString();
+            bookISBN = bookISBN.replaceAll("[^0-9]", "");
+            if ((Integer)getRevResponse.get("responseCode") == 200) {
+                dbReviewsResponse = getRevResponse;
+                int bookId = DatabaseCU.getBookId(bookISBN);
+                System.out.println("book id:" + bookId);
+                DatabaseCU.addHistory(userId, bookId);
+            }
             System.out.println("aici2");
-            // TODO Decomenteaza linia urmatoare pentru a testa crawlerul
-            dbReviewsResponse = null;
+
             if ((dbReviewsResponse == null) || dbReviewsResponse.toString().equalsIgnoreCase("{}")) {
                 try {
                     bookReviews = ReviewCollectorCU.requestReviews(bookInfo);
@@ -113,12 +104,10 @@ public class MasterCU {
                     if (bookReviews.has("mesajEroare")) {
                         foundReviewError = bookReviews.get("mesajEroare").toString().contains("review-uri");
                         System.out.println(foundReviewError);
-                        if (foundReviewError == true) {
+                        if (foundReviewError) {
                             System.out.println("aici");
                             isbnFound = false;
                             flag = false;
-                            bookISBN = bookInfo.get("ISBN").toString();
-                            bookISBN = bookISBN.replaceAll("[^0-9]", "");
                             System.out.println(bookISBN);
                             jsonObjectForMA =new JSONObject();
                             jsonObjectForMA.put("ISBN", bookISBN);
@@ -129,16 +118,22 @@ public class MasterCU {
                             output = errorMsg.toString();
                         }
                     }
+                    else {
+                        DatabaseCU.addBook(bookISBN, bookReviews.get("overall_rating").toString());
+                        int bookId = DatabaseCU.getBookId(bookISBN);
+                        System.out.println("book id:" + bookId);
+                        DatabaseCU.addReviews(bookReviews, userId, bookId);
+                        DatabaseCU.addHistory(userId, bookId);
+                    }
                     System.out.println("REVIEWS DE LA CRAWLER : " + bookReviews.toString());
 
-                    //TODO  DatabaseCU.sendReviews(bookReviews);
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             } else {
                 bookReviews = dbReviewsResponse;
             }
-            if (isbnFound == true) {
+            if (isbnFound) {
                 output = bookReviews.toString();
             } else {
                 output = jsonObjectForMA.toString();

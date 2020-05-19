@@ -21,11 +21,17 @@ public class LoginController {
     public ResponseEntity<Integer> requestLogin(@RequestBody LoginRequest request) {
         try {
             JSONObject json = new JSONObject(request);
-            System.out.println(json.toString());
+//            System.out.println(json.toString());
             DatabaseCU.requestLogin(json);
             int responseCode = (int) json.get("responseCode");
-            System.out.println(json.toString());
-            return ResponseEntity.status(responseCode).build();
+            if (responseCode == 200) {
+                return ResponseEntity.status(responseCode).body(1);
+            }
+            else {
+                return ResponseEntity.status(responseCode).body(0);
+//            System.out.println(json.toString())
+            }
+
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
         }

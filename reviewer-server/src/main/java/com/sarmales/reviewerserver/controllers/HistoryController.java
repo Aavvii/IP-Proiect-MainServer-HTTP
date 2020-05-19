@@ -3,6 +3,7 @@ package com.sarmales.reviewerserver.controllers;
 import com.sarmales.reviewerserver.models.HistoryRequest;
 import com.sarmales.reviewerserver.models.LoginRequest;
 import com.sarmales.reviewerserver.services.DatabaseCU;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user/history")
@@ -37,7 +41,7 @@ public class HistoryController {
             System.out.println(mainJson.toString());
             return ResponseEntity.status(200).body(mainJson.toString());
 
-           // return ResponseEntity.status(200).body(historyFromDB);
+            // return ResponseEntity.status(200).body(historyFromDB);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

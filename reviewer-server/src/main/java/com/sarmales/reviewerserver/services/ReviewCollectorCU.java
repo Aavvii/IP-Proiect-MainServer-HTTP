@@ -16,10 +16,9 @@ public class ReviewCollectorCU {
     public static JSONObject requestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
         JSONObject jsonResponse = null;
         URL obj = null;
-        String ISBN=null;
         try {
             System.out.println("bookInformation: " + bookInformation);//ok
-           ISBN = bookInformation.get("ISBN").toString();
+            String ISBN = bookInformation.get("ISBN").toString();
             ISBN = ISBN.replaceAll("[^0-9]", "");
             System.out.println("isbn : " + ISBN);
             obj = new URL("http://stefanbeleuz.pythonanywhere.com/review/goodreads?isbn=" + ISBN);//ok
@@ -60,11 +59,7 @@ public class ReviewCollectorCU {
                     jsonResponse.put("responseCode","411");
                 }else {
                     if(ErrorHandling.isValid(response.toString())) {
-                        jsonResponse = new JSONObject();
-                        jsonResponse.put("isbn",ISBN);
-                        JSONObject json1 = new JSONObject(response.toString());
-                        jsonResponse.put("overall_rating",json1.get("overall_rating"));
-                       jsonResponse.put("reviews", json1.get("reviews"));
+                        jsonResponse = new JSONObject(response.toString());
                         System.out.println(jsonResponse.toString());
                         if(ErrorHandling.isJsonEmpty(jsonResponse,"reviews") || !jsonResponse.has("reviews")){
                             jsonResponse =new JSONObject();
