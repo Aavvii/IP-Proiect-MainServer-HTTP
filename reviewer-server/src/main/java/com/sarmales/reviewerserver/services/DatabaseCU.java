@@ -79,26 +79,52 @@ public class DatabaseCU {
         }
     }
 
-    public static boolean requestHistory(JSONObject jsonObject) throws IOException {
+    public static String requestHistory(JSONObject jsonObject) throws IOException {
+        String response = null;
         URL obj = new URL("http://87.255.79.195:7532/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");
+        postConnection.setConnectTimeout(5000);
         postConnection.setDoOutput(true);
         JSONObject requestJson = new JSONObject();
+//        { "method":"getHistoryByUserNickname",
+//                "argument":"maria123"}//DanutCiobotaru932
         requestJson.put("method", "getHistoryByUserNickname");
-        requestJson.put("argument", jsonObject.get("nickname"));//in fct de ce primesc de la mobile
+        System.out.println("argument"+jsonObject.get("username").toString());//ok
+        requestJson.put("argument", jsonObject.get("username").toString());//in fct de ce primesc de la mobile
+
         System.out.println(requestJson.toString());
         BufferedWriter send = new BufferedWriter(new OutputStreamWriter(postConnection.getOutputStream()));
         send.write(requestJson.toString());
         send.close();
 
-        int responseCode = postConnection.getResponseCode();
-        postConnection.getInputStream().close();
+
+        int responseCode = 0;
+        responseCode = postConnection.getResponseCode();
+        System.out.println("database history response code: " + responseCode);
         if (responseCode == HttpURLConnection.HTTP_OK) { //success
-            return true;
+            BufferedReader in = null;
+            try {
+                in = new BufferedReader(new InputStreamReader(postConnection.getInputStream()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String inputLine = null;
+            StringBuffer responseSB = new StringBuffer();
+            while (true) {
+                if (!((inputLine = in.readLine()) != null)) break;
+                responseSB.append(inputLine);
+                String error = responseSB.substring(2, 7);
+                if (error.equals("error")) {
+                    //trimitere eroare la mobile app
+                }
+            }
+            System.out.println("response historyDB: " + responseSB);
+            response=responseSB.toString();
+            in.close();
         }
-        else { return false; }
+        return response;
     }
 
 
