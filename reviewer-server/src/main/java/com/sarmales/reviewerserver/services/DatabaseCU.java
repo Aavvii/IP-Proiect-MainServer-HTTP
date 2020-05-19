@@ -190,7 +190,7 @@ public class DatabaseCU {
     public static JSONObject databaseRequestReviews(JSONObject jsonObject) throws IOException {
 
         client = HttpClient.newHttpClient();
-        String uri = "http://localhost:9595/test";
+        String uri ="http://92.80.203.112:9595/test";
 
 
         JSONObject request = new JSONObject();
