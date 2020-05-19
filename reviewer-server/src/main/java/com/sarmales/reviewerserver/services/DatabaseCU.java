@@ -1,6 +1,7 @@
 package com.sarmales.reviewerserver.services;
 
-//import com.validator.ErrorHandling;
+
+import com.sarmales.reviewerserver.handler.ErrorHandling;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,11 +25,11 @@ public class DatabaseCU {
 
     public static void requestLogin(JSONObject in) throws IOException {
 
-        URL obj = new URL("http://87.255.79.195:7532/test");
+        URL obj = new URL("http://92.80.203.112:9595/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");
-        postConnection.setConnectTimeout(3000);
+        postConnection.setConnectTimeout(10000);
         postConnection.setDoOutput(true);
         in.put("method", "getUserByNickname");
         in.put("argument", in.get("username"));
@@ -61,7 +62,7 @@ public class DatabaseCU {
     }
 
     public static boolean singUpToDatabase (JSONObject in) throws IOException {
-        URL obj = new URL("http://87.255.79.195:7532/test");
+        URL obj = new URL("http://92.80.203.112:9595/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");
@@ -140,7 +141,7 @@ public class DatabaseCU {
 
     public static String requestHistory(JSONObject jsonObject) throws IOException {
         String response = null;
-        URL obj = new URL("http://87.255.79.195:7532/test");
+        URL obj = new URL("http://92.80.203.112:9595/test");
         HttpURLConnection postConnection = (HttpURLConnection) obj.openConnection();
         postConnection.setRequestMethod("POST");
         postConnection.setRequestProperty("content-type", "application/json");

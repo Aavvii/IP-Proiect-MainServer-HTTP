@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/test")
 public class ReviewsController {
     @PostMapping
-    public ResponseEntity<String> getReviews (@RequestBody MobileAppRequest request) {
+    public ResponseEntity<String> getReviews (@RequestBody MobileAppRequest request) throws IOException, InterruptedException {
         System.out.println(request.getEncoding());
         JSONObject json = new JSONObject(request);
         System.out.println(json.toString());
