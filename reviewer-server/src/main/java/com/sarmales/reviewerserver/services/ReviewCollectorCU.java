@@ -16,9 +16,10 @@ public class ReviewCollectorCU {
     public static JSONObject requestReviews(JSONObject bookInformation) throws IOException, InterruptedException {
         JSONObject jsonResponse = null;
         URL obj = null;
+        String ISBN=null;
         try {
             System.out.println("bookInformation: " + bookInformation);//ok
-            String ISBN = bookInformation.get("ISBN").toString();
+             ISBN = bookInformation.get("ISBN").toString();
             ISBN = ISBN.replaceAll("[^0-9]", "");
             System.out.println("isbn : " + ISBN);
             obj = new URL("http://stefanbeleuz.pythonanywhere.com/review/goodreads?isbn=" + ISBN);//ok
